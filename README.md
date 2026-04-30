@@ -33,8 +33,8 @@ Detailed anti-pattern explanations live in `claude-md-best-practices/references/
 ### Option A — install for the current user (recommended)
 
 ```bash
-git clone https://github.com/<your-username>/claude-md-best-practices.git
-cd claude-md-best-practices
+git clone https://github.com/Rock070/claude-docs-diagnose.git
+cd claude-docs-diagnose
 cp -r ./claude-md-best-practices ~/.claude/skills/
 ```
 
@@ -52,7 +52,7 @@ cp -r path/to/claude-md-best-practices/claude-md-best-practices .claude/skills/
 ### Option C — one-liner
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<your-username>/claude-md-best-practices/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Rock070/claude-docs-diagnose/main/install.sh | bash
 ```
 
 (See `install.sh` for what this script does.)

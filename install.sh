@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-REPO_URL="https://github.com/<your-username>/claude-md-best-practices.git"
+REPO_URL="https://github.com/Rock070/claude-docs-diagnose.git"
 SKILL_NAME="claude-md-best-practices"
 TARGET_DIR="${HOME}/.claude/skills"
 
