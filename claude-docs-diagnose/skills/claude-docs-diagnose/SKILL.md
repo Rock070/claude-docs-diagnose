@@ -86,7 +86,7 @@ Build a file inventory before dispatching subagents:
 4. Check the auto-memory file for the **current project only** (flag if > 180 lines — truncated at 200). Derive the path from `$PWD`; do NOT use `find` or `glob` across `~/.claude/projects/` — that leaks unrelated projects' MEMORY.md into context. Run exactly:
 
    ```bash
-   PROJECT_KEY="-$(pwd | sed 's|^/||; s|/|-|g')"
+   PROJECT_KEY="-$(pwd | sed 's|^/||; s|[/.]|-|g')"
    MEMORY_DIR="${HOME}/.claude/projects/${PROJECT_KEY}/memory"
    MEMORY_FILE="${MEMORY_DIR}/MEMORY.md"
    if [ -f "$MEMORY_FILE" ]; then
