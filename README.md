@@ -26,7 +26,7 @@ The skill runs in three phases:
 2. **Phase 2 — Parallel analysis (3 subagents, single message):** three `Task`-spawned subagents work in parallel, each focused on a slice of the 16 anti-patterns. Subagents are **read-only** — their long tool output never enters the main context, keeping token cost low.
 3. **Phase 3 — Synthesis (sequential):** the main agent collects the subagent reports and produces the user-facing audit (and an optimized draft, in `optimize` / `apply` mode).
 
-Detailed anti-pattern explanations live in `claude-docs-diagnose/references/anti-patterns.md` and are loaded only by the subagent that needs them — never inlined into the main `SKILL.md`.
+Detailed anti-pattern explanations live in `claude-docs-diagnose/skills/claude-docs-diagnose/references/anti-patterns.md` and are loaded only by the subagent that needs them — never inlined into the main `SKILL.md`.
 
 ## Install
 
@@ -80,12 +80,12 @@ You can also invoke it explicitly via `/claude-docs-diagnose:claude-docs-diagnos
 |---|---|
 | `.claude-plugin/marketplace.json` | Marketplace manifest — declares this repo as a Claude Code plugin marketplace |
 | `claude-docs-diagnose/.claude-plugin/plugin.json` | Plugin manifest — version, license, and skill discovery path |
-| `claude-docs-diagnose/SKILL.md` | The skill itself — frontmatter + 3-phase orchestration (~180 lines) |
-| `claude-docs-diagnose/references/anti-patterns.md` | Detailed 16-mistake catalog, loaded on demand by Phase 2 subagents |
-| `claude-docs-diagnose/references/recommended-template.md` | Recommended `CLAUDE.md` template + cheatsheet, loaded in `optimize`/`apply`/`create` modes |
-| `claude-docs-diagnose/references/claude-best-practices.md` | Anthropic's official best-practices doc (English) |
-| `claude-docs-diagnose/references/agents-md.md` | Addy Osmani's `AGENTS.md` research roundup (English) |
-| `claude-docs-diagnose/references/claude-md-common-mistakes.md` | termdock's 10-mistake write-up (English) |
+| `claude-docs-diagnose/skills/claude-docs-diagnose/SKILL.md` | The skill itself — frontmatter + 3-phase orchestration (~180 lines) |
+| `claude-docs-diagnose/skills/claude-docs-diagnose/references/anti-patterns.md` | Detailed 16-mistake catalog, loaded on demand by Phase 2 subagents |
+| `claude-docs-diagnose/skills/claude-docs-diagnose/references/recommended-template.md` | Recommended `CLAUDE.md` template + cheatsheet, loaded in `optimize`/`apply`/`create` modes |
+| `claude-docs-diagnose/skills/claude-docs-diagnose/references/claude-best-practices.md` | Anthropic's official best-practices doc (English) |
+| `claude-docs-diagnose/skills/claude-docs-diagnose/references/agents-md.md` | Addy Osmani's `AGENTS.md` research roundup (English) |
+| `claude-docs-diagnose/skills/claude-docs-diagnose/references/claude-md-common-mistakes.md` | termdock's 10-mistake write-up (English) |
 | `LICENSE` | MIT |
 | `README.md` | This file |
 
@@ -124,7 +124,7 @@ Grouped by the Phase 2 subagent that owns the check.
 | 15 | Critical Rules Not Emphasized |
 | 16 | `MEMORY.md` Truncation |
 
-Full table with symptoms and fixes lives in `claude-docs-diagnose/references/anti-patterns.md`.
+Full table with symptoms and fixes lives in `claude-docs-diagnose/skills/claude-docs-diagnose/references/anti-patterns.md`.
 
 ## Target metrics
 
