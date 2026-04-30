@@ -1,52 +1,52 @@
-2026年3月17日8 分鐘閱讀ai-cli-tools
+March 17, 2026 - 8 min read - ai-cli-tools
 
-ETH Zurich 研究證實多數 context 檔案反而傷害 agent 表現。這裡是 10 個具體的 CLAUDE.md 錯誤 — 附修改前後對比 — 以及如何修正。
+ETH Zurich research confirms most context files actually hurt agent performance. Here are 10 concrete CLAUDE.md mistakes — with before/after diffs — and how to fix them.
 
 Danny Huang
 
-## 你的 CLAUDE.md 很可能在拖後腿
+## Your CLAUDE.md is probably dragging you down
 
-工程界有一個跨越世紀的模式。系統可以運作。人們往上加東西。沒人移除任何東西。系統在自身重量下退化。
+There's a pattern in engineering that's older than this century. The system works. People keep adding things. Nobody removes anything. The system degrades under its own weight.
 
-多數開發者寫完 CLAUDE.md 後只會往上加東西，從不質疑它是否真的有用。2026 年 2 月，蘇黎世聯邦理工學院（ETH Zurich）發表了第一篇嚴格研究 AI coding agent context 檔案的論文——Thibaud Gloaguen、Niels Mundler、Mark Muller、Veselin Raychev、Martin Vechev 的 [Evaluating AGENTS.md](https://arxiv.org/abs/2602.11988) 。核心結論：LLM 生成的 context 檔案比完全不提供，任務成功率降低 3%。即使人工撰寫的檔案也只提升約 4%，同時推理成本增加超過 20%。
+Most developers only ever add to their CLAUDE.md, never questioning whether it's actually helping. In February 2026, ETH Zurich published the first rigorous study of AI coding agent context files — Thibaud Gloaguen, Niels Mundler, Mark Muller, Veselin Raychev, and Martin Vechev's [Evaluating AGENTS.md](https://arxiv.org/abs/2602.11988). Headline result: LLM-generated context files reduce task success rate by 3% compared to providing nothing at all. Even hand-written files only improve success by about 4%, while increasing inference cost by over 20%.
 
-問題不是 context 檔案沒用，而是多數人寫得太爛——太長、太冗餘、太死板。每一行壞指令都在跟你的實際任務搶注意力，稀釋 agent 的專注度、浪費 token。
+The problem isn't that context files are useless — it's that most of them are written badly: too long, too redundant, too rigid. Every bad line of instruction competes with your real task for attention, dilutes the agent's focus, and burns tokens.
 
-這篇文章涵蓋 10 個具體錯誤，每個附修改前後對比。如果你的 CLAUDE.md 中了任何一條，今天就修。
+This article covers 10 concrete mistakes, each with a before/after diff. If your CLAUDE.md hits any of them, fix it today.
 
-## 錯誤 1：檔案太長
+## Mistake 1: The file is too long
 
-最常見的失敗模式。開發者從合理的 30 行開始，然後不斷追加規則、範例、文件，直到膨脹到 300 行以上。就像為每種可能天氣打包的行李箱——太重搬不動，結果你還是只穿那三套衣服。
+The most common failure mode. Developers start with a reasonable 30 lines, then keep appending rules, examples, and documentation until it bloats past 300 lines. It's like a suitcase packed for every possible weather — too heavy to carry, and you end up wearing the same three outfits anyway.
 
-**為什麼有害：** ETH Zurich 研究發現，越長的 context 檔案推理成本越高（超過 20%），但任務成功率的回報遞減甚至為負。前沿模型能可靠遵循大約 150-200 條指令，超過這個閾值就會開始忽略規則——而且你無法預測它丟掉哪些。Addy Osmani [總結了核心問題](https://addyosmani.com/blog/agents-md/) ：自動生成的內容不是沒用，是冗餘——agent 讀 repo 就能找到，提供兩次同樣的資訊只是增加噪音。
+**Why it hurts:** ETH Zurich found that longer context files raise inference cost (over 20%) with diminishing or negative returns on task success. Frontier models can reliably follow about 150-200 instructions; past that threshold they start ignoring rules — and you can't predict which ones get dropped. Addy Osmani [summarized the core problem](https://addyosmani.com/blog/agents-md/): auto-generated content isn't useless, it's redundant — the agent finds it by reading the repo, and providing the same information twice just adds noise.
 
-**修改前：**
+**Before:**
 
 ```markdown
 ## Project Overview
 This is a Next.js 15 application using the App Router with TypeScript...
-[20 行概述]
+[20 lines of overview]
 
 ## Architecture
-[40 行架構細節]
+[40 lines of architecture details]
 
 ## Code Conventions
-[30 行慣例]
+[30 lines of conventions]
 
 ## API Documentation
-[50 行 API 文件]
+[50 lines of API docs]
 
 ## Database Schema
-[40 行 schema 描述]
+[40 lines of schema description]
 
 ## Deployment
-[30 行 deploy 指令]
+[30 lines of deploy instructions]
 
 ## Troubleshooting
-[40 行已知問題]
+[40 lines of known issues]
 ```
 
-**修改後：**
+**After:**
 
 ```markdown
 ## Architecture
@@ -67,17 +67,17 @@ This is a Next.js 15 application using the App Router with TypeScript...
 - Test: pnpm test | Lint: pnpm lint | Build: pnpm build
 ```
 
-15 行。那 250 行的 API 文件、schema 描述、troubleshooting 指南屬於實際的文件檔案，agent 需要時會自己去讀——不該放在每次 session 都載入的檔案裡。
+15 lines. Those 250 lines of API docs, schema descriptions, and troubleshooting belong in real documentation files the agent reads when it needs to — not in a file loaded into every session.
 
-**原則：** 100 行以下。每一行要通過這個測試：「拿掉這行，agent 會犯一個它讀程式碼也無法自己恢復的錯誤嗎？」
+**Rule of thumb:** under 100 lines. Each line should pass the test: "without this line, would the agent make a mistake it couldn't recover from by reading the code?"
 
-## 錯誤 2：重述 agent 已經看得到的資訊
+## Mistake 2: Restating what the agent can already see
 
-你的 repo 有 `tsconfig.json` 且 `"strict": true` 。 `package.json` 列出了所有依賴。`.eslintrc` 定義了 lint 規則。在 CLAUDE.md 重述這些，就像在窗戶上貼一張「這是窗戶」的標示。
+Your repo has `tsconfig.json` with `"strict": true`. `package.json` lists every dependency. `.eslintrc` defines lint rules. Restating these in CLAUDE.md is like sticking a "this is a window" label on a window.
 
-**為什麼有害：** Agent 會讀你的檔案。當 CLAUDE.md 說「這是 TypeScript 專案」而 `tsconfig.json` 說一樣的事，agent 現在有兩個 source of truth 要調和。調和過程花推理 token，卻零價值。
+**Why it hurts:** the agent reads your files. When CLAUDE.md says "this is a TypeScript project" and `tsconfig.json` says the same thing, the agent now has two sources of truth to reconcile. Reconciliation costs reasoning tokens for zero value.
 
-**修改前：**
+**Before:**
 
 ```markdown
 ## Tech Stack
@@ -91,22 +91,22 @@ This is a Next.js 15 application using the App Router with TypeScript...
 - Formatting: Prettier 3.5
 ```
 
-**修改後：**
+**After:**
 
 ```markdown
 ## Architecture
 - Next.js 15 App Router, PostgreSQL via Prisma, NextAuth.js v5
 ```
 
-其他所有「tech stack」的內容都在 `package.json` 裡。Agent 第一次讀檔就會找到。唯一值得寫的是不明顯的架構決策——光看依賴列表推斷不出來的東西。
+Everything else under "tech stack" is in `package.json`. The agent finds it the first time it reads the file. The only thing worth writing is the non-obvious architectural decisions — things you can't infer from a dependency list.
 
-## 錯誤 3：沒有架構區塊
+## Mistake 3: No architecture section
 
-跟過度列舉技術相反的問題：完全不提供架構 context。有些 CLAUDE.md 全是 style 規則和 lint 偏好，對系統如何組合在一起隻字未提。一堆交通號誌，但沒有地圖。
+The opposite problem from over-listing tech: providing zero architectural context. Some CLAUDE.md files are all style rules and lint preferences with not a word about how the system fits together. A pile of traffic signs and no map.
 
-**為什麼有害：** 沒有架構 context，agent 會做出結構上錯誤的決策。它在 route handler 裡直接寫資料庫查詢，因為不知道你有 repository 模式。它建了一個新的 auth helper，因為不知道 `src/lib/auth.ts` 裡已經有了。Style 規則很廉價——linter 會管。架構是 agent 從冷啟動真正無法快速推斷的東西。
+**Why it hurts:** without architectural context, the agent makes structurally wrong decisions. It writes a database query directly inside a route handler because it doesn't know you have a repository pattern. It builds a new auth helper because it doesn't know `src/lib/auth.ts` already exists. Style rules are cheap — your linter handles them. Architecture is what the agent genuinely cannot infer quickly from a cold start.
 
-**修改前：**
+**Before:**
 
 ```markdown
 ## Rules
@@ -117,7 +117,7 @@ This is a Next.js 15 application using the App Router with TypeScript...
 - Always add trailing commas
 ```
 
-**修改後：**
+**After:**
 
 ```markdown
 ## Architecture
@@ -131,25 +131,25 @@ This is a Next.js 15 application using the App Router with TypeScript...
 - No default exports except pages
 ```
 
-「修改前」的命名慣例和縮排規則，你的 linter 和 Prettier 已經在強制執行了。「修改後」告訴 agent 東西在哪、怎麼連接——這些是它需要大量探索才能自己發現的資訊。
+The naming and indentation rules in "Before" are already enforced by your linter and Prettier. "After" tells the agent where things live and how they connect — information it would otherwise have to discover with significant exploration.
 
-## 錯誤 4：缺少 build 和測試指令
+## Mistake 4: Missing build and test commands
 
-你知道怎麼跑你的專案。Agent 不知道。大量 CLAUDE.md 省略了最基本的操作資訊：如何 build、測試、lint、啟動。
+You know how to run your project. The agent doesn't. A surprising number of CLAUDE.md files omit the most basic operational information: how to build, test, lint, and start the project.
 
-**為什麼有害：** 沒有明確指令，agent 會猜。你的專案用 `pnpm test:unit` ，它跑 `npm test` 。正確指令是 `turbo build --filter=web` ，它試 `npm run build` 。錯誤的指令浪費執行週期、產生令人困惑的錯誤、迫使 agent 陷入除錯迴圈去修一個根本不存在的問題。
+**Why it hurts:** without explicit commands, the agent guesses. Your project uses `pnpm test:unit` and it runs `npm test`. The correct command is `turbo build --filter=web` and it tries `npm run build`. Wrong commands waste cycles, produce confusing errors, and force the agent into debugging loops chasing a problem that doesn't exist.
 
-**修改前：**
+**Before:**
 
 ```markdown
 ## Project
 A SaaS platform for inventory management.
 
 ## Code Style
-[30 行 style 規則]
+[30 lines of style rules]
 ```
 
-**修改後：**
+**After:**
 
 ```markdown
 ## Project
@@ -166,15 +166,15 @@ SaaS inventory management platform. Turborepo monorepo.
 - DB seed: pnpm db:seed
 ```
 
-8 行。讓 agent 在每一個操作任務上不用猜。如果你的專案有非標準設定（monorepo、自訂 script、環境需求），這些指令是你整個 CLAUDE.md 中價值最高的內容。
+8 lines. Stops the agent from guessing on every operation. If your project has any non-standard setup (monorepo, custom scripts, environment requirements), these commands are the highest-value content in your entire CLAUDE.md.
 
-## 錯誤 5：過度死板的 ALWAYS/NEVER 規則
+## Mistake 5: Over-rigid ALWAYS/NEVER rules
 
-開發者熱愛寫絕對規則。「ALWAYS 用 functional component。」「NEVER 用 any。」「ALWAYS 先寫測試再寫實作。」這些感覺很精確。實際上它們是脆弱的。
+Developers love writing absolutes. "ALWAYS use functional components." "NEVER use any." "ALWAYS write tests before implementation." They feel precise. They're actually brittle.
 
-**為什麼有害：** 絕對規則不留合理例外的空間。Agent 遵循「NEVER 用 `any` 」然後花 15 分鐘為一個臨時腳本寫複雜的 generic type。它遵循「ALWAYS 先寫測試」然後為一行 config 修改寫測試。隨著檔案增長，死板指令之間也會互相衝突——「ALWAYS 用 server component」跟那個真的需要 client-side state 的表單打架。
+**Why it hurts:** absolute rules leave no room for legitimate exceptions. The agent follows "NEVER use `any`" and spends 15 minutes writing a complex generic type for a one-off script. It follows "ALWAYS write tests first" and writes a test for a one-line config tweak. As the file grows, rigid instructions also start contradicting each other — "ALWAYS use server components" fights with the form that genuinely needs client-side state.
 
-**修改前：**
+**Before:**
 
 ```markdown
 ## Rules
@@ -187,7 +187,7 @@ SaaS inventory management platform. Turborepo monorepo.
 - NEVER mutate state directly
 ```
 
-**修改後：**
+**After:**
 
 ```markdown
 ## Conventions
@@ -197,15 +197,15 @@ SaaS inventory management platform. Turborepo monorepo.
 - Type safety: avoid \`any\` — use \`unknown\` with type guards when the type is genuinely uncertain
 ```
 
-「修改後」用「prefer」和「avoid」搭配明確的例外。這給 agent 判斷空間，同時清楚傳達你的意圖。被移除的規則（「always 先寫測試」、「always 加 JSDoc」）是 workflow 偏好，屬於 [skills](https://www.termdock.com/zh/blog/skill-md-vs-claude-md-vs-agents-md) ，不該放在永遠載入的 context 裡。
+"After" uses "prefer" and "avoid" with explicit exceptions. This gives the agent room to judge while making your intent clear. The removed rules ("always write tests first", "always add JSDoc") are workflow preferences and belong in [skills](https://www.termdock.com/zh/blog/skill-md-vs-claude-md-vs-agents-md), not in always-loaded context.
 
-## 錯誤 6：沒有 Constraints 區塊
+## Mistake 6: No Constraints section
 
-Conventions 告訴 agent 該做什麼。Constraints 告訴它絕對不能做什麼。很多 CLAUDE.md 有大量 conventions 但零 constraints，放任 agent 犯破壞性錯誤。
+Conventions tell the agent what to do. Constraints tell it what it absolutely must not do. Many CLAUDE.md files have plenty of conventions and zero constraints, leaving the agent free to make destructive mistakes.
 
-**為什麼有害：** 沒有明確限制，agent 會開心地修改你的 migration 檔案來「修復」schema 問題、刪掉「沒用到」但其實是用名稱動態載入的測試 fixture、或把你的 public API 重構成 breaking change。這些錯誤在 code review 中很難發現，修復成本極高。短短的 constraints 區塊是 CLAUDE.md 中 ROI 最高的內容。
+**Why it hurts:** without explicit constraints, the agent will happily edit your migration files to "fix" a schema issue, delete an "unused" test fixture that's actually loaded dynamically by name, or refactor your public API into a breaking change. These mistakes are hard to catch in code review and expensive to fix. A short Constraints section is the highest-ROI content in CLAUDE.md.
 
-**修改前：**
+**Before:**
 
 ```markdown
 ## Guidelines
@@ -214,9 +214,9 @@ Conventions 告訴 agent 該做什麼。Constraints 告訴它絕對不能做什�
 - Keep functions small
 ```
 
-這些是空洞的願望。它們阻止不了任何事。以下才能真正防止損害：
+These are empty wishes. They prevent nothing. This is what actually prevents damage:
 
-**修改後：**
+**After:**
 
 ```markdown
 ## Constraints
@@ -227,15 +227,15 @@ Conventions 告訴 agent 該做什麼。Constraints 告訴它絕對不能做什�
 - GraphQL schema changes require running pnpm codegen after modification
 ```
 
-每條 constraint 針對一個具體的、可恢復但成本高的錯誤。「Write clean code」什麼都沒教。「Never modify migration files」防止一次 production 事故。
+Each constraint targets a specific, recoverable-but-expensive mistake. "Write clean code" teaches nothing. "Never modify migration files" prevents a production incident.
 
-## 錯誤 7：重複 linter 規則
+## Mistake 7: Duplicating linter rules
 
-你的 ESLint config 強制 `no-unused-vars` 。Prettier config 強制 2 格縮排。CLAUDE.md 又說「不要 unused variables」和「用 2 格縮排」。兩個守衛站在同一扇門前。
+Your ESLint config enforces `no-unused-vars`. Your Prettier config enforces 2-space indentation. CLAUDE.md then says "no unused variables" and "use 2-space indentation". Two guards posted at the same door.
 
-**為什麼有害：** Linter 確定性地強制規則。CLAUDE.md 不會。Agent 寫了違反 linter 的程式碼，linter 在下次存檔或 CI 就會抓到。在 CLAUDE.md 重述 linter 規則不會讓 agent 更認真遵守——只是在已經有自動化後盾的規則上浪費 context window。更糟的是，如果你的 linter config 改了但 CLAUDE.md 沒更新，你就有矛盾的指令。
+**Why it hurts:** the linter enforces rules deterministically. CLAUDE.md doesn't. If the agent writes code that violates the linter, the linter catches it on save or in CI. Restating linter rules in CLAUDE.md doesn't make the agent follow them more carefully — it just burns context window on rules that already have automated backstops. Worse, if your linter config changes and CLAUDE.md doesn't, you now have contradictory instructions.
 
-**修改前：**
+**Before:**
 
 ```markdown
 ## Code Style
@@ -250,7 +250,7 @@ Conventions 告訴 agent 該做什麼。Constraints 告訴它絕對不能做什�
 - Destructure props in function signatures
 ```
 
-**修改後：**
+**After:**
 
 ```markdown
 ## Code Style
@@ -258,28 +258,28 @@ Conventions 告訴 agent 該做什麼。Constraints 告訴它絕對不能做什�
 - If lint fails after changes, fix violations before considering the task done.
 ```
 
-2 行取代 9 行。Linter 是 source of truth。CLAUDE.md 只需要告訴 agent linter 存在，而且要尊重它。
+2 lines instead of 9. The linter is the source of truth. CLAUDE.md just needs to tell the agent the linter exists and must be respected.
 
-## 錯誤 8：忽略 AGENTS.md 的跨工具相容性
+## Mistake 8: Ignoring AGENTS.md cross-tool compatibility
 
-把所有 agent context 只建在 CLAUDE.md 裡會造成工具鎖定。Claude Code 讀 CLAUDE.md。Codex CLI、Copilot CLI、Gemini CLI、Cursor 不讀——它們讀 AGENTS.md。
+Putting all agent context only in CLAUDE.md creates tool lock-in. Claude Code reads CLAUDE.md. Codex CLI, Copilot CLI, Gemini CLI, and Cursor don't — they read AGENTS.md.
 
-**為什麼有害：** 團隊會演進。你今天用的工具不一定是六個月後用的。如果所有專案 context 都在 CLAUDE.md，切換到 Codex CLI 或加入 Gemini CLI 作為輔助工具，意味著要麼把所有東西複製到 AGENTS.md（違反 DRY），要麼用新工具時完全失去 context engineering 的成果。
+**Why it hurts:** teams evolve. The tool you use today may not be the tool you use six months from now. If all your project context lives in CLAUDE.md, switching to Codex CLI or adding Gemini CLI as a secondary tool means either copying everything to AGENTS.md (DRY violation) or losing all your context engineering work when you use the new tool.
 
-**修改前：**
-
-```
-project-root/
-  CLAUDE.md          # 80 行專案 context
-  (沒有 AGENTS.md)
-```
-
-**修改後：**
+**Before:**
 
 ```
 project-root/
-  AGENTS.md          # 70 行 — 標準專案 context
-  CLAUDE.md          # 10 行 — 僅 Claude Code 專屬指令
+  CLAUDE.md          # 80 lines of project context
+  (no AGENTS.md)
+```
+
+**After:**
+
+```
+project-root/
+  AGENTS.md          # 70 lines — standard project context
+  CLAUDE.md          # 10 lines — Claude Code-only instructions
 ```
 ```markdown
 # CLAUDE.md
@@ -290,15 +290,15 @@ Read AGENTS.md for project architecture and conventions.
 - Prefer subagents for research tasks
 ```
 
-AGENTS.md 放可攜的專案 context。CLAUDE.md 只放 Claude Code 專屬指令（compaction 行為、subagent 偏好、權限覆寫）。所有 AI CLI 工具從 AGENTS.md 取得專案 context；Claude Code 兩個都讀。完整的分層策略請看 [SKILL.md vs CLAUDE.md vs AGENTS.md](https://www.termdock.com/zh/blog/skill-md-vs-claude-md-vs-agents-md) 。
+AGENTS.md holds portable project context. CLAUDE.md only holds Claude Code-specific instructions (compaction behavior, subagent preferences, permission overrides). All AI CLI tools pick up project context from AGENTS.md; Claude Code reads both. For the full layering strategy, see [SKILL.md vs CLAUDE.md vs AGENTS.md](https://www.termdock.com/zh/blog/skill-md-vs-claude-md-vs-agents-md).
 
-## 錯誤 9：沒有版本控制 CLAUDE.md
+## Mistake 9: Not version-controlling CLAUDE.md
 
-有些開發者把 CLAUDE.md 放進 `.gitignore` ，認為它是個人偏好檔案。有些只在本機建立，從不 commit。檔案只存在一台機器上。
+Some developers put CLAUDE.md in `.gitignore`, treating it as a personal preference file. Some create it locally and never commit it. The file lives on a single machine.
 
-**為什麼有害：** CLAUDE.md 是專案文件。它編碼了架構決策、命名慣例、硬性限制——這些適用於每一個貢獻者，不管是人還是 AI。不做版本控制意味著團隊成員得到不一致的 agent 行為、新開發者從零開始、檔案距離徹底遺失只差一個 `rm` 。也代表你沒有 context engineering 演進的歷史——無法把 agent 表現變化跟 CLAUDE.md 的修改關聯起來。
+**Why it hurts:** CLAUDE.md is project documentation. It encodes architectural decisions, naming conventions, hard constraints — things that apply to every contributor, human or AI. Not version-controlling it means team members get inconsistent agent behavior, new developers start from zero, and the file is one `rm` away from being lost forever. It also means you have no history of how your context engineering evolved — no way to correlate agent performance changes with CLAUDE.md edits.
 
-**修改前：**
+**Before:**
 
 ```
 # .gitignore
@@ -306,28 +306,28 @@ CLAUDE.md
 .claude/
 ```
 
-**修改後：**
+**After:**
 
 ```
 # .gitignore
-# 版本控制 CLAUDE.md 和 AGENTS.md — 它們是專案文件。
-# 只忽略個人設定：
+# Version-control CLAUDE.md and AGENTS.md — they're project docs.
+# Only ignore personal settings:
 .claude/settings.local.json
 ```
 
-Commit CLAUDE.md。Commit AGENTS.md。Commit `.claude/skills/` 裡的 skills。在 PR 中審查這些檔案的變更，就像審查程式碼一樣。ETH Zurich 的研究測試了包含開發者 commit 的 context 檔案的 repo，發現它們表現優於 LLM 生成的——部分原因是 commit 過的檔案經過了理解專案的人的審查、精煉、維護。
+Commit CLAUDE.md. Commit AGENTS.md. Commit skills under `.claude/skills/`. Review changes to these files in PRs the same way you review code. The ETH Zurich study tested repos that included context files committed by developers and found they outperformed LLM-generated ones — partly because committed files were reviewed, refined, and maintained by people who understood the project.
 
-管理這些 context 檔案跨多個專案工作區——在切換 repo 時讓 CLAUDE.md、AGENTS.md 和 skills 保持同步——正是 [Termdock](https://www.termdock.com/zh) 的 workspace 系統能幫上忙的地方。切換工作區時完整恢復 session 狀態，該工作區的每個終端自動載入正確的專案 context。
+Managing these context files across multiple project workspaces — keeping CLAUDE.md, AGENTS.md, and skills in sync as you switch between repos — is exactly what [Termdock](https://www.termdock.com/zh)'s workspace system helps with. Switch workspaces and the session state restores fully; every terminal in that workspace auto-loads the right project context.
 
 Try Termdock — Session Recovery works out of the box. [Free download →](https://github.com/termdock/termdock-issues/releases)
 
-## 錯誤 10：塞入應該是 skill 的任務特定內容
+## Mistake 10: Stuffing in task-specific content that should be a skill
 
-你的 CLAUDE.md 有 40 行「如何建立 Database Migration」、30 行「PR Review Checklist」、25 行「Deploy 流程」。這些不是專案 context，是任務 workflow。而且它們每次 session 都載入，不管你需不需要——就像帶著雪鏟去海灘。
+Your CLAUDE.md has 40 lines on "How to create a Database Migration", 30 lines on "PR Review Checklist", 25 lines on "Deploy Process". These aren't project context — they're task workflows. And they load into every session whether you need them or not — like bringing a snow shovel to the beach.
 
-**為什麼有害：** 任務特定的 workflow 會載入到每個 session，即使你在做完全無關的事。在修 CSS bug？那 40 行 migration workflow 正在白白消耗 context window。 [Agent Skills 系統](https://www.termdock.com/zh/blog/skill-md-vs-claude-md-vs-agents-md) 正是為了解決這個問題——skill 只在當前任務符合 description 時才載入。把任務 workflow 放在 CLAUDE.md 裡完全違背了按需載入的設計意圖。
+**Why it hurts:** task-specific workflows load into every session, even when you're doing something completely unrelated. Fixing a CSS bug? Those 40 lines of migration workflow are burning context window for nothing. The [Agent Skills system](https://www.termdock.com/zh/blog/skill-md-vs-claude-md-vs-agents-md) exists precisely to solve this — a skill loads only when the current task matches its description. Putting task workflows in CLAUDE.md completely defeats the on-demand loading design.
 
-**修改前：**
+**Before:**
 
 ```markdown
 ## Database Migration Workflow
@@ -355,7 +355,7 @@ Try Termdock — Session Recovery works out of the box. [Free download →](http
 [...]
 ```
 
-**修改後（CLAUDE.md）：**
+**After (CLAUDE.md):**
 
 ```markdown
 ## Constraints
@@ -363,7 +363,7 @@ Try Termdock — Session Recovery works out of the box. [Free download →](http
 - DB commands: pnpm db:generate, pnpm db:migrate, pnpm db:status
 ```
 
-**修改後（`.claude/skills/database-migration/SKILL.md` ）：**
+**After (`.claude/skills/database-migration/SKILL.md`):**
 
 ```markdown
 ---
@@ -383,28 +383,28 @@ description: >
 7. If tests fail, drop and regenerate — never edit the migration file
 ```
 
-硬性限制留在 CLAUDE.md（全域適用）。完整 workflow 移到 skill（只在相關時載入）。PR review checklist 變成另一個 skill。Deploy 變成另一個 skill。你的基準 context 從 100 多行混雜內容降到 15 行架構和限制。
+Hard constraints stay in CLAUDE.md (globally relevant). The full workflow moves into a skill (loaded only when relevant). The PR review checklist becomes another skill. Deploy becomes another skill. Your baseline context drops from 100+ lines of mixed content to 15 lines of architecture and constraints.
 
-## 檢查清單
+## Checklist
 
-現在就用這張表審查你的 CLAUDE.md：
+Audit your CLAUDE.md against this table right now:
 
-| 檢查項目 | 通過/不通過 |
+| Check | Pass/Fail |
 | --- | --- |
-| 總共 100 行以下 |  |
-| 有 Architecture 區塊 |  |
-| 有 Constraints 區塊 |  |
-| 有 build/test/lint Commands |  |
-| 沒有從 linter/tsconfig/package.json 重複的內容 |  |
-| 沒有不帶例外的 ALWAYS/NEVER |  |
-| AGENTS.md 存在且包含可攜的專案 context |  |
-| CLAUDE.md 和 AGENTS.md 已 commit 到 git |  |
-| 任務 workflow 在 `.claude/skills/` 裡，不在 CLAUDE.md 裡 |  |
-| 檔案是人工撰寫的，不是 `/init` 生成的 |  |
+| Under 100 lines total |  |
+| Has an Architecture section |  |
+| Has a Constraints section |  |
+| Has build/test/lint Commands |  |
+| No content duplicated from linter/tsconfig/package.json |  |
+| No ALWAYS/NEVER without exceptions |  |
+| AGENTS.md exists with portable project context |  |
+| CLAUDE.md and AGENTS.md committed to git |  |
+| Task workflows live in `.claude/skills/`, not CLAUDE.md |  |
+| File is hand-written, not `/init`-generated |  |
 
-**這張表的摘要：** 10 個檢查點驗證你的 CLAUDE.md。如果超過 3 個不通過，你的 context 檔案很可能在傷害 agent 表現而不是幫助它。
+**Summary of this table:** 10 checks to validate your CLAUDE.md. If more than 3 fail, your context file is probably hurting agent performance instead of helping.
 
-修正其中一半，你就會看到可衡量的 agent 表現提升——更快的任務完成、更低的 token 成本、更少 agent 因為指令埋在噪音裡而忽略它們的情況。 [AI CLI 工具完整指南](https://www.termdock.com/zh/blog/ai-cli-tools-guide) 有一個可以直接用的範本，以及所有主要工具的 context engineering 全局觀。
+Fix half of them and you'll see a measurable lift in agent performance — faster task completion, lower token cost, fewer cases of the agent ignoring instructions because they were buried in noise. The [complete AI CLI tools guide](https://www.termdock.com/zh/blog/ai-cli-tools-guide) has a ready-to-use template plus a global view of context engineering across all major tools.
 
 Free Download
 
@@ -414,44 +414,44 @@ Multi-terminal drag-and-drop layout, workspace Git sync, built-in AI integration
 
 [Download Termdock →](https://github.com/termdock/termdock-issues/releases)
 
-## 相關文章
+## Related articles
 
-2026年3月16日 ·ai-cli-tools
+March 16, 2026 - ai-cli-tools
 
-### [2026 AI CLI 工具完全指南：從安裝到多 Agent 工作流](https://www.termdock.com/zh/blog/ai-cli-tools-guide)
+### [The complete 2026 AI CLI tools guide: from install to multi-agent workflows](https://www.termdock.com/zh/blog/ai-cli-tools-guide)
 
-完整涵蓋 2026 年所有主流 AI 終端寫程式工具的指南。包含 Claude Code、Gemini CLI、Copilot CLI、Codex CLI、aider、Crush、OpenCode、Goose、Amp 的安裝教學、定價分析、context engineering、多 Agent 工作流、MCP 整合、終端模擬器搭配，以及安全最佳實踐。
+Comprehensive guide to every major AI terminal coding tool in 2026. Covers install, pricing, context engineering, multi-agent workflows, MCP integration, terminal emulator pairings, and security best practices for Claude Code, Gemini CLI, Copilot CLI, Codex CLI, aider, Crush, OpenCode, Goose, and Amp.
 
 ai-cliclaude-codegemini-clicopilot-cliterminaldeveloper-tools
 
-2026年3月16日 ·agent-skills
+March 16, 2026 - agent-skills
 
-### [SKILL.md vs CLAUDE.md vs AGENTS.md：什麼時候用哪個](https://www.termdock.com/zh/blog/skill-md-vs-claude-md-vs-agents-md)
+### [SKILL.md vs CLAUDE.md vs AGENTS.md: when to use which](https://www.termdock.com/zh/blog/skill-md-vs-claude-md-vs-agents-md)
 
-完整比較 SKILL.md、CLAUDE.md、AGENTS.md 三種設定檔 — 各自的用途、哪些工具會讀取、如何分層配置讓 AI agent 效能最佳化。
+A full comparison of SKILL.md, CLAUDE.md, and AGENTS.md — what each is for, which tools read each, and how to layer them for optimal AI agent performance.
 
 skill-mdclaude-mdagents-mdcontext-engineeringagent-skills
 
-2026年3月20日 ·ai-cli-tools
+March 20, 2026 - ai-cli-tools
 
-### [Git Worktree 多 Agent 衝突排除：6 種問題的診斷與修復](https://www.termdock.com/zh/blog/git-worktree-conflicts-ai-agents)
+### [Git Worktree multi-agent conflict resolution: diagnosing and fixing 6 common problems](https://www.termdock.com/zh/blog/git-worktree-conflicts-ai-agents)
 
-修復多 AI agent 使用 git worktree 時遇到的衝突。涵蓋 lock 檔、index.lock、branch 衝突、合併失敗、過期 worktree、build 產物汙染。
+Fix the conflicts that show up when multiple AI agents share git worktrees. Covers lock files, index.lock, branch conflicts, merge failures, stale worktrees, and build artifact contamination.
 
 git-worktreemulti-agentconflictsclaude-codetroubleshootingai-cli
 
-2026年3月20日 ·ai-cli-tools
+March 20, 2026 - ai-cli-tools
 
-### [20 分鐘用 Claude Code 建一個 MCP Server](https://www.termdock.com/zh/blog/build-first-mcp-server-claude-code)
+### [Build an MCP Server with Claude Code in 20 minutes](https://www.termdock.com/zh/blog/build-first-mcp-server-claude-code)
 
-手把手教學：用 TypeScript 建一個能用的 MCP server，接上 Claude Code，實際呼叫 tool 測試。
+Step-by-step tutorial: build a working MCP server in TypeScript, wire it into Claude Code, and call its tools live.
 
 mcpmodel-context-protocolclaude-codetutorialai-cliserver
 
-2026年3月20日 ·ai-cli-tools
+March 20, 2026 - ai-cli-tools
 
-### [CLAUDE.md 撰寫指南：AI CLI 工具的 Context Engineering](https://www.termdock.com/zh/blog/claude-md-writing-guide)
+### [The CLAUDE.md writing guide: context engineering for AI CLI tools](https://www.termdock.com/zh/blog/claude-md-writing-guide)
 
-從零開始寫出真正提升 AI agent 表現的 CLAUDE.md。五個區塊、實際範例、token 預算控制、測試策略完整教學。
+Write a CLAUDE.md that actually lifts AI agent performance, from scratch. Five sections, real examples, token-budget control, and a complete testing strategy.
 
 claude-mdcontext-engineeringclaude-codeworkflowai-clibest-practices
