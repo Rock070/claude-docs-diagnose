@@ -34,7 +34,8 @@ Detailed anti-pattern explanations live in `claude-md-best-practices/references/
 
 ```bash
 git clone https://github.com/<your-username>/claude-md-best-practices.git
-cp -r claude-md-best-practices/claude-md-best-practices ~/.claude/skills/
+cd claude-md-best-practices
+cp -r ./claude-md-best-practices ~/.claude/skills/
 ```
 
 After Claude Code auto-discovers the skill, test it with:
@@ -93,24 +94,38 @@ You can also invoke it explicitly via `/skill claude-md-best-practices`.
 
 ## The 16-point checklist (summary)
 
-| # | Mistake | Owner |
-|---|---|---|
-| 1 | Context Stuffing | Subagent A |
-| 2 | Static Learnings | Subagent A |
-| 3 | Missing Plan Mode guidance | Subagent A |
-| 4 | Weak Verification | Subagent A |
-| 5 | Undocumented Permissions (team) | Subagent A |
-| 6 | No Format Standards | Subagent A |
-| 7 | Stale Documentation | Subagent B |
-| 8 | Missing `docs/` Index | Subagent B |
-| 9 | Orphan Docs | Subagent B |
-| 10 | Code-Doc Drift | Subagent B |
-| 11 | Cache-Hostile Ordering | Subagent A |
-| 12 | Instruction Overload (>150) | Subagent C |
-| 13 | Missing Modular Rules | Subagent C |
-| 14 | No Feedback Loop | Subagent C |
-| 15 | Critical Rules Not Emphasized | Subagent C |
-| 16 | `MEMORY.md` Truncation | Subagent C |
+Grouped by the Phase 2 subagent that owns the check.
+
+**Subagent A — Size, cache order, and core hygiene**
+
+| # | Mistake |
+|---|---|
+| 1 | Context Stuffing |
+| 2 | Static Learnings |
+| 3 | Missing Plan Mode guidance |
+| 4 | Weak Verification |
+| 5 | Undocumented Permissions (team) |
+| 6 | No Format Standards |
+| 11 | Cache-Hostile Ordering |
+
+**Subagent B — Documentation sync and `docs/` health**
+
+| # | Mistake |
+|---|---|
+| 7 | Stale Documentation |
+| 8 | Missing `docs/` Index |
+| 9 | Orphan Docs |
+| 10 | Code-Doc Drift |
+
+**Subagent C — Modularity, emphasis, memory**
+
+| # | Mistake |
+|---|---|
+| 12 | Instruction Overload (>150) |
+| 13 | Missing Modular Rules |
+| 14 | No Feedback Loop |
+| 15 | Critical Rules Not Emphasized |
+| 16 | `MEMORY.md` Truncation |
 
 Full table with symptoms and fixes lives in `claude-md-best-practices/references/anti-patterns.md`.
 
