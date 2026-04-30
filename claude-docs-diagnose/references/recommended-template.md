@@ -1,6 +1,6 @@
 # Recommended CLAUDE.md Template + Cheatsheet
 
-> Loaded on demand by `claude-md-best-practices/SKILL.md` in `optimize`, `apply`, or `create` modes. Use the template as the structural baseline when generating or rewriting a CLAUDE.md. Keep output ≤ 150 lines / ~2.5k tokens.
+> Loaded on demand by `claude-docs-diagnose/SKILL.md` in `optimize`, `apply`, or `create` modes. Use the template as the structural baseline when generating or rewriting a CLAUDE.md. Keep output ≤ 150 lines / ~2.5k tokens.
 
 ---
 

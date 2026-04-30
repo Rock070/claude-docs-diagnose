@@ -1,6 +1,6 @@
 ---
-name: claude-md-best-practices
-description: Audit, write, and maintain CLAUDE.md files following the battle-tested practices from Anthropic (Boris Cherny, Thariq Shihipar), Addy Osmani, termdock, and the ETH Zurich / Lulla et al. ICSE JAWs 2026 empirical studies. Use when the user asks to write, review, audit, prune, optimize, or fix a CLAUDE.md / AGENTS.md / GEMINI.md, complains that Claude is ignoring rules, mentions context bloat or token budgets for instruction files, asks about MEMORY.md being truncated, wants to split a monolithic CLAUDE.md into .claude/rules/ modules, or refers to the 16 common CLAUDE.md mistakes. Also trigger when the user invokes /claude-md-audit or asks "is my CLAUDE.md too long".
+name: claude-docs-diagnose
+description: Audit, write, and maintain CLAUDE.md files following the battle-tested practices from Anthropic (Boris Cherny, Thariq Shihipar), Addy Osmani, termdock, and the ETH Zurich / Lulla et al. ICSE JAWs 2026 empirical studies. Use when the user asks to write, review, audit, prune, optimize, or fix a CLAUDE.md / AGENTS.md / GEMINI.md, complains that Claude is ignoring rules, mentions context bloat or token budgets for instruction files, asks about MEMORY.md being truncated, wants to split a monolithic CLAUDE.md into .claude/rules/ modules, or refers to the 16 common CLAUDE.md mistakes. Also trigger when the user invokes /claude-docs-diagnose or asks "is my CLAUDE.md too long".
 argument-hint: [analyze|audit|optimize|apply|create|prune]
 allowed-tools: [Read, Glob, Grep, Edit, Write, Bash, Task]
 license: MIT
@@ -161,7 +161,7 @@ Use this skill whenever the user:
 - Reports that Claude keeps ignoring rules or that the instruction file feels bloated.
 - Wants to split a monolithic `CLAUDE.md` into `.claude/rules/` modules.
 - Mentions `MEMORY.md` truncation, the 200-line limit, or context rot.
-- Invokes `/claude-md-audit` or asks "is my CLAUDE.md too long".
+- Invokes `/claude-docs-diagnose` or asks "is my CLAUDE.md too long".
 
 ---
 

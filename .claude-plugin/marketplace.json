@@ -7,8 +7,8 @@
   "description": "Plugins for diagnosing and improving Claude Code documentation files (CLAUDE.md, AGENTS.md, GEMINI.md).",
   "plugins": [
     {
-      "name": "claude-md-best-practices",
-      "source": "./claude-md-best-practices",
+      "name": "claude-docs-diagnose",
+      "source": "./claude-docs-diagnose",
       "description": "Audit, write, and prune CLAUDE.md files using a 3-phase + parallel-subagent pattern that keeps reference content out of the main agent's context (token-aware).",
       "version": "1.0.0",
       "license": "MIT"

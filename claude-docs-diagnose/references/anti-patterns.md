@@ -1,6 +1,6 @@
 # 16 Anti-Patterns — Detailed Reference
 
-> Loaded on demand by `claude-md-best-practices/SKILL.md` Phase 2 subagents. Each anti-pattern below is tagged with the subagent (A / B / C) responsible for checking it.
+> Loaded on demand by `claude-docs-diagnose/SKILL.md` Phase 2 subagents. Each anti-pattern below is tagged with the subagent (A / B / C) responsible for checking it.
 
 ---
 
