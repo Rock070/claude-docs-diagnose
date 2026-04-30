@@ -9,7 +9,7 @@
     {
       "name": "claude-md-best-practices",
       "source": "./claude-md-best-practices",
-      "description": "Audit, write, and prune CLAUDE.md files using a 3-phase + parallel-subagent pattern (token-aware, docu-optimize style).",
+      "description": "Audit, write, and prune CLAUDE.md files using a 3-phase + parallel-subagent pattern that keeps reference content out of the main agent's context (token-aware).",
       "version": "1.0.0",
       "license": "MIT"
     }

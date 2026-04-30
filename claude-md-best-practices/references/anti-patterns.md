@@ -69,7 +69,7 @@ Subagent B owns documentation sync and `docs/` health. Skip this subagent entire
 
 | # | Mistake | Symptom | Fix |
 |---|---|---|---|
-| 7 | **Stale Documentation** | docs/ out of sync with code | Use `/docu-optimize sync` to catch drift |
+| 7 | **Stale Documentation** | docs/ out of sync with code | Run this skill's `audit` mode periodically to catch drift |
 | 8 | **Missing Index** | docs/ has no README | Add `docs/README.md` as an index |
 | 9 | **Orphan Docs** | Files in docs/ not linked from anywhere | Delete or add to Deep Dive |
 | 10 | **Code-Doc Drift** | API signatures in docs don't match code | Align API table to real exports |
@@ -160,9 +160,9 @@ Shared across all three subagent scopes. Apply during writing, day-to-day usage,
 3. Every time Claude keeps violating one specific rule → the file is too long, the rule is being drowned out; **cut redundancy**
 
 ### Periodic audit (monthly / major milestone)
-```bash
-# At project root
-/docu-optimize analyze     # full 16-anti-pattern scan
-/docu-optimize sync        # align code <-> docs
-/docu-optimize insights    # surface rules to add from git history
-```
+
+At the project root, ask Claude to run this skill in each mode:
+
+- "Audit my CLAUDE.md and `.claude/` ecosystem." — full 16-anti-pattern scan (`audit` mode).
+- "Check whether my `docs/` is in sync with the code." — code ↔ docs drift check (Subagent B).
+- "Look at recent git history and suggest CLAUDE.md rules I'm missing." — insights from friction patterns.

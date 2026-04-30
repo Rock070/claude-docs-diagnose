@@ -20,7 +20,7 @@ When triggered, the skill:
 
 ## How it runs (token-aware)
 
-The skill follows the same 3-phase model as Anthropic's `docu-optimize`:
+The skill runs in three phases:
 
 1. **Phase 1 — Discovery (sequential):** the main agent inventories your `CLAUDE.md` hierarchy, `.claude/` ecosystem, `docs/` tree, and `MEMORY.md`.
 2. **Phase 2 — Parallel analysis (3 subagents, single message):** three `Task`-spawned subagents work in parallel, each focused on a slice of the 16 anti-patterns. Subagents are **read-only** — their long tool output never enters the main context, keeping token cost low.
