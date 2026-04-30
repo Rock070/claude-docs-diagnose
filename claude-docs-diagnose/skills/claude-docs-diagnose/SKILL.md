@@ -83,7 +83,20 @@ Build a file inventory before dispatching subagents:
    ```
 2. Record each file's path, line count (`wc -l`), and approximate token count (chars ÷ 4).
 3. Map the `.claude/` ecosystem: `settings.json`, `commands/`, `skills/`, `agents/`, `rules/`.
-4. Check the auto-memory file: `~/.claude/projects/<hash>/memory/MEMORY.md` (flag if > 180 lines — truncated at 200).
+4. Check the auto-memory file for the **current project only** (flag if > 180 lines — truncated at 200). Derive the path from `$PWD`; do NOT use `find` or `glob` across `~/.claude/projects/` — that leaks unrelated projects' MEMORY.md into context. Run exactly:
+
+   ```bash
+   PROJECT_KEY="-$(pwd | sed 's|^/||; s|/|-|g')"
+   MEMORY_DIR="${HOME}/.claude/projects/${PROJECT_KEY}/memory"
+   MEMORY_FILE="${MEMORY_DIR}/MEMORY.md"
+   if [ -f "$MEMORY_FILE" ]; then
+     wc -l "$MEMORY_FILE"
+   else
+     echo "no project MEMORY.md (path: $MEMORY_FILE)"
+   fi
+   ```
+
+   If the file does not exist, that is a finding (no auto-memory yet) — move on. Do not search for MEMORY.md elsewhere.
 5. Detect environment: solo / private VPS vs team / shared repo (ask if unclear). Permission-hygiene checks only apply to the team case.
 
 Save this inventory in your working memory — you will pass it verbatim to every Phase 2 subagent.
