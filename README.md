@@ -30,32 +30,28 @@ Detailed anti-pattern explanations live in `claude-md-best-practices/references/
 
 ## Install
 
-### Option A — install for the current user (recommended)
+This repo is a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces). Install the plugin from inside Claude Code:
 
-```bash
-git clone https://github.com/Rock070/claude-docs-diagnose.git
-cd claude-docs-diagnose
-cp -r ./claude-md-best-practices ~/.claude/skills/
+```text
+/plugin marketplace add Rock070/claude-docs-diagnose
+/plugin install claude-md-best-practices@claude-docs-diagnose
 ```
 
-After Claude Code auto-discovers the skill, test it with:
+That's it. After install, test it with:
 
 > "Audit my CLAUDE.md."
 
-### Option B — install per project
+### Updating
 
-```bash
-mkdir -p .claude/skills
-cp -r path/to/claude-md-best-practices/claude-md-best-practices .claude/skills/
+```text
+/plugin marketplace update claude-docs-diagnose
 ```
 
-### Option C — one-liner
+### Uninstalling
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/Rock070/claude-docs-diagnose/main/install.sh | bash
+```text
+/plugin uninstall claude-md-best-practices@claude-docs-diagnose
 ```
-
-(See `install.sh` for what this script does.)
 
 ## Usage
 
@@ -82,13 +78,14 @@ You can also invoke it explicitly via `/skill claude-md-best-practices`.
 
 | Path | Purpose |
 |---|---|
+| `.claude-plugin/marketplace.json` | Marketplace manifest — declares this repo as a Claude Code plugin marketplace |
+| `claude-md-best-practices/.claude-plugin/plugin.json` | Plugin manifest — version, license, and skill discovery path |
 | `claude-md-best-practices/SKILL.md` | The skill itself — frontmatter + 3-phase orchestration (~180 lines) |
 | `claude-md-best-practices/references/anti-patterns.md` | Detailed 16-mistake catalog, loaded on demand by Phase 2 subagents |
 | `claude-md-best-practices/references/recommended-template.md` | Recommended `CLAUDE.md` template + cheatsheet, loaded in `optimize`/`apply`/`create` modes |
 | `claude-md-best-practices/references/claude-best-practices.md` | Anthropic's official best-practices doc (English) |
 | `claude-md-best-practices/references/agents-md.md` | Addy Osmani's `AGENTS.md` research roundup (English) |
 | `claude-md-best-practices/references/claude-md-common-mistakes.md` | termdock's 10-mistake write-up (English) |
-| `install.sh` | One-liner installer that copies the skill into `~/.claude/skills/` |
 | `LICENSE` | MIT |
 | `README.md` | This file |
 

@@ -1,0 +1,17 @@
+{
+  "name": "claude-docs-diagnose",
+  "owner": {
+    "name": "Rock070",
+    "url": "https://github.com/Rock070"
+  },
+  "description": "Plugins for diagnosing and improving Claude Code documentation files (CLAUDE.md, AGENTS.md, GEMINI.md).",
+  "plugins": [
+    {
+      "name": "claude-md-best-practices",
+      "source": "./claude-md-best-practices",
+      "description": "Audit, write, and prune CLAUDE.md files using a 3-phase + parallel-subagent pattern (token-aware, docu-optimize style).",
+      "version": "1.0.0",
+      "license": "MIT"
+    }
+  ]
+}

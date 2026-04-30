@@ -1,0 +1,12 @@
+{
+  "name": "claude-md-best-practices",
+  "description": "Audit, write, and prune CLAUDE.md files using a 3-phase + parallel-subagent pattern (token-aware, docu-optimize style).",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Rock070",
+    "url": "https://github.com/Rock070"
+  },
+  "homepage": "https://github.com/Rock070/claude-docs-diagnose",
+  "skills": ["./"]
+}
